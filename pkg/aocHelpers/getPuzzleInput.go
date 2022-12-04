@@ -6,31 +6,27 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path"
-	"runtime"
+	"strings"
 )
 
-func DownloadPuzzleInput(year string, day string) error {
-
-	// Find the solution file path
-	_, filename, _, _ := runtime.Caller(1)
-	filePath := path.Dir(filename) + "/data.txt"
-
-	// Only download when the file does not exist
-	// Otherwise we would hammer adventofcode servers
+// Only download when the file does not exist
+// Otherwise we would hammer adventofcode servers
+func checkIfFileExists(year string, day string, filePath string) (bool, error) {
 	if _, err := os.Stat(filePath); err == nil {
-		fmt.Println("🎅 Input data.txt already exists, skipping downloading")
-		return nil
+		return true, nil
 	} else if errors.Is(err, os.ErrNotExist) {
-		fmt.Println("🎅 Input data.txt does not exist, downloading...")
-		downloadInputData(year, day, filePath)
-		return nil
+		return false, nil
 	} else {
-		return err
+		return false, err //Schrodinger's file. Might exist and also might not.
 	}
 }
 
-func downloadInputData(year string, day string, filePath string) {
+func DownloadPuzzleInput(year string, day string, filePath string) {
+	fileExists, _ := checkIfFileExists(year, day, filePath)
+	if fileExists {
+		return
+	}
+	fmt.Printf("ℹ️ %s/%s/data.txt does not exist. Going to download\n", year, day)
 
 	// Create the file
 	out, err := os.Create(filePath)
@@ -40,6 +36,7 @@ func downloadInputData(year string, day string, filePath string) {
 	defer out.Close()
 
 	// Get the data
+	day = strings.TrimLeft(day, "0") // Remove leading zeros
 	var url string = fmt.Sprintf("https://adventofcode.com/%s/day/%s/input", year, day)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {

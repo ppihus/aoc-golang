@@ -20,15 +20,13 @@ func ReadFromFile(filename string) string {
 	return string(data)
 }
 
-func ReadIntsFromFile(filename string) []int {
-	_, currentFile, _, _ := runtime.Caller(1)
-	filePath := path.Dir(currentFile) + "/" + filename
-
+func ReadIntsFromFile(filePath string) []int {
 	file, err := os.Open(filePath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 

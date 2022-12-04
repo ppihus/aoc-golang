@@ -3,6 +3,9 @@ module github.com/ppihus/aoc-golang
 go 1.19
 
 require (
-	github.com/samber/lo v1.33.0 // indirect
-	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
+	github.com/juliangruber/go-intersect v1.1.0
+	github.com/juliangruber/go-intersect/v2 v2.0.1
+	github.com/samber/lo v1.36.0
 )
+
+require golang.org/x/exp v0.0.0-20221126150942-6ab00d035af9 // indirect
