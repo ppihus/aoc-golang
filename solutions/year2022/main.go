@@ -30,7 +30,7 @@ func Solve(day string) {
 	case "04":
 		fmt.Println("🎅🏻🎅🏼🎅🏽 Day 3: Rucksack Reorganization")
 		printSolution(year, day, "1", Day_04_Part1(filePath))
-		// printSolution(year, day, "2", Day_04_Part2(filePath))
+		printSolution(year, day, "2", Day_04_Part2(filePath))
 	default:
 		fmt.Println("No day specificed") // Automate to solve latest available
 	}
