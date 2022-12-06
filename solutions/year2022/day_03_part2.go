@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 
+	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/juliangruber/go-intersect/v2"
 	aochelpers "github.com/ppihus/aoc-golang/pkg/aocHelpers"
 )
@@ -17,7 +18,7 @@ func Day_03_Part2(filePath string) int {
 	var answer int
 	var group []string
 	var groupsOfThree [][]string
-	duplicatesSet := createEmptySet()
+	duplicatesSet := mapset.NewSet[string]()
 
 	i := 0
 	for {
@@ -28,14 +29,14 @@ func Day_03_Part2(filePath string) int {
 					duplicates := getIntersectionOfThreeSlices(groupsOfThree[0], groupsOfThree[1], groupsOfThree[2])
 
 					for _, duplicate := range duplicates {
-						duplicatesSet[duplicate] = false
+						duplicatesSet.Add(duplicate)
 					}
 
-					for duplicate := range duplicatesSet {
+					for duplicate := range duplicatesSet.Iterator().C {
 						answer += getCharacterPosition([]rune(duplicate)[0])
 					}
 
-					duplicatesSet = createEmptySet() // reset each time
+					duplicatesSet = mapset.NewSet[string]() // reset each time
 
 					groupsOfThree = nil
 				}

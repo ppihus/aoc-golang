@@ -5,7 +5,10 @@ import (
 	"io"
 	"log"
 
+	// "github.com/juliangruber/go-intersect/v2"
+	mapset "github.com/deckarep/golang-set/v2"
 	"github.com/juliangruber/go-intersect/v2"
+
 	aochelpers "github.com/ppihus/aoc-golang/pkg/aocHelpers"
 )
 
@@ -14,7 +17,7 @@ func Day_03_Part1(filePath string) int {
 	defer file.Close()
 	r := bufio.NewReader(file)
 
-	itemsInBothHalves := make(map[int]bool)
+	itemsInBothHalves := mapset.NewSet[int]()
 	var rucksack []int
 	var answer int
 
@@ -26,14 +29,14 @@ func Day_03_Part1(filePath string) int {
 				duplicatesInOnerucksack := intersect.SimpleGeneric(rucksack[:half], rucksack[half:])
 
 				for _, duplicate := range duplicatesInOnerucksack {
-					itemsInBothHalves[duplicate] = false
+					itemsInBothHalves.Add(duplicate)
 				}
 
-				for d := range itemsInBothHalves {
+				for d := range itemsInBothHalves.Iterator().C {
 					answer += d
 				}
 
-				itemsInBothHalves = make(map[int]bool)
+				itemsInBothHalves = mapset.NewSet[int]()
 				rucksack = []int{}
 			} else {
 				rucksack = append(rucksack, getCharacterPosition(c))
@@ -47,10 +50,6 @@ func Day_03_Part1(filePath string) int {
 		}
 	}
 	return answer
-}
-
-func createEmptySet() map[string]bool {
-	return make(map[string]bool)
 }
 
 func getCharacterPosition(c rune) int {
